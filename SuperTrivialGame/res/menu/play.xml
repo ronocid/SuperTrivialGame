@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_help"
+        android:title="@string/action_help"
+        android:icon="@drawable/help"/>
+	<item
+	    android:id="@+id/action_comodin"
+	    android:title="@string/comodin"
+	    android:icon="@drawable/joker"/>
+
+</menu>

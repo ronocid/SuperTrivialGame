@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.pmm.supertrivialgame"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="8" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.NoTitleBar" >
+        <activity
+            android:name="org.pmm.supertrivialgame.Splash"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.pmm.supertrivialgame.Credits"
+            android:label="@string/title_activity_credits" >
+        </activity>
+        <activity
+            android:name="org.pmm.supertrivialgame.Main"
+            android:label="@string/title_activity_main" >
+        </activity>
+        <activity
+            android:name="org.pmm.supertrivialgame.Play"
+            android:label="@string/title_activity_play" >
+        </activity>
+        <activity
+            android:name="org.pmm.supertrivialgame.Settings"
+            android:label="@string/title_activity_settings" >
+        </activity>
+        <activity
+            android:name="org.pmm.supertrivialgame.Creditos"
+            android:label="@string/title_activity_creditos" >
+        </activity>
+        <activity
+            android:name="org.pmm.supertrivialgame.Scores"
+            android:label="@string/title_activity_scores" >
+        </activity>
+    </application>
+
+</manifest>
