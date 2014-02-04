@@ -37,7 +37,7 @@ import android.widget.Toast;
 
 public class Play extends Activity {
 
-	private static final String SCORES = "Scores";
+	private static final String SCORES = "scores";
 	private static final String RANKING = "ranking";
 	private static final String SCORE2 = "score";
 	private static final String USERNAME = "username";
@@ -278,14 +278,14 @@ public class Play extends Activity {
 		preguntas.add(new Question("Espectáculos","¿En qué película aparecían The Beatles en dibujos animados?",new String[]{"Yellow submarine","A Hard Day’s Night","Magical Mystery Tour","Help!"},0,3));
 		preguntas.add(new Question("Historia","¿Por qué cruz pasó a la historia Henri Dunant?",new String[]{"Cruz de Occitania","Cruz Roja","Cruz de Borgoña","Cruz del calvario"},1,0));
 		preguntas.add(new Question("Geografía","¿Cómo se llama el mar que separa Argentina de las islas Malvinas?",new String[]{"Mar Argentino","Mar de la Plata","Mar Malvino","Mar del Tucumán"},0,3));
-		preguntas.add(new Question("Arte y Literatura","¿A qué poeta debemos el Llanto por Ignacio Sánchez Mejías?",new String[]{"Miguel Hernández","García Lorca","Pablo Neruda","Rafael Alberti"},1,2));
+		/*preguntas.add(new Question("Arte y Literatura","¿A qué poeta debemos el Llanto por Ignacio Sánchez Mejías?",new String[]{"Miguel Hernández","García Lorca","Pablo Neruda","Rafael Alberti"},1,2));
 		preguntas.add(new Question("Ciencias y Naturaleza","¿Qué miembros de una colmena se alimentan con jalea real?",new String[]{"Las larvas","Los zánganos","La reina","Las obreras"},0,2));
 		preguntas.add(new Question("Historia","¿Quién fue el legislador ateniense más famoso por la severidad de sus penas?",new String[]{"Platón","Salaminia","Dracón","Aristóteles"},2,1));
 		preguntas.add(new Question("Arte y Literatura","¿En qué café dirigió una famosa tertulia literaria Ramón Gómez de la Serna?",new String[]{"Café Madrid","Café Pombo","Café Gijón","Café Cibeles"},1,3));
 		preguntas.add(new Question("Ocio y Deportes","¿Qué equipo de fútbol español fue el primero en llevarse a sus vitrinas la Supercopa de Europa?",new String[]{"Real Madrid","Valencia","Fc Barcelona","Atlético de Madrid"},1,2));
 		preguntas.add(new Question("Historia","¿En qué país 100.000 personas protagonizaron La Larga Marcha?",new String[]{"India","Rusia","China","Indonesia"},2,0));
 		preguntas.add(new Question("Espectáculos","¿Quién dirigió primero Tesis y después Abre los ojos?",new String[]{"Álex de la Iglesia","Alejandro Amenábar","Eduardo Noriega","Mateo Gil"},1,0));
-		preguntas.add(new Question("Arte y Literatura","¿Quién escribió un Viaje a la Luna y la Historia cómica de los estados e imperios del Sol?",new String[]{"Cyrano de Bergerac","Julio Verne","Victor Hugo","H. G. Wells"},0,1));
+		preguntas.add(new Question("Arte y Literatura","¿Quién escribió un Viaje a la Luna y la Historia cómica de los estados e imperios del Sol?",new String[]{"Cyrano de Bergerac","Julio Verne","Victor Hugo","H. G. Wells"},0,1));*/
 	}
 
 	@Override
@@ -340,7 +340,6 @@ public class Play extends Activity {
 		protected Void doInBackground(Void... params) {
 				while(!isCancelled()&&progress<100){
 					if(comodin){
-						System.out.println(comodin);
 						for(;cont<7;cont++){
 							try{
 								publishProgress(cont);
@@ -352,7 +351,6 @@ public class Play extends Activity {
 						comodin=false;
 					}else{
 					progress++;
-					System.out.println(progress);
 					try{
 						Thread.sleep(100);
 					}catch(Exception e){
@@ -370,7 +368,6 @@ public class Play extends Activity {
 		protected void onProgressUpdate(Integer... values) {
 			barraTiempo.setProgress(progress);
 			if(comodin){
-				System.out.println(cont);
 				cuenta(cont);
 			}
 		}
@@ -378,7 +375,6 @@ public class Play extends Activity {
 		@Override
 		protected void onPostExecute(Void result) {
 			this.cancel(true);
-			System.out.println(progress+"hola "+this.toString()+" "+this.isCancelled());
 			if(preguntas.size()==numPregunta){
 				dialogRespuesta(TIEMPO, ACABO_EL_TIEMPO_UTLIMA_PREGUNTA+puntuacion);
 			}else{
@@ -419,6 +415,7 @@ public class Play extends Activity {
 	
 	
 	private void dialogRespuesta(String titulo, String mensaje){
+		bloquearBotones();
 		hiloTiempo.cancel(true);
 		AlertDialog alerta=null;
 		AlertDialog.Builder ventana=new AlertDialog.Builder(this);
@@ -454,6 +451,13 @@ public class Play extends Activity {
 		alerta.show();
 	}
 	
+	private void bloquearBotones() {
+		respuesta1.setEnabled(false);
+		respuesta2.setEnabled(false);
+		respuesta3.setEnabled(false);
+		respuesta4.setEnabled(false);
+	}
+
 	private void cuenta(int cont) {
 		Context contexto=getApplicationContext();
 		CharSequence mensaje= cont+"...";
@@ -475,12 +479,16 @@ public class Play extends Activity {
 			serializer.startDocument(null, null);
 			serializer.startTag(null, SCORES);
 
-			openFileInput("scores.xml");
-			XmlPullParser parser = XmlPullParserFactory.newInstance().newPullParser();
+			inputStream=openFileInput("scores.xml");
+			/*XmlPullParser parser = XmlPullParserFactory.newInstance().newPullParser();
+			parser.setInput(inputStream, null);*/
+			XmlPullParser parser = Xml.newPullParser();
+			parser.setInput(inputStream, "UTF-8");
 			
 			for(int cont=0;cont<25 && eventType != XmlPullParser.END_DOCUMENT;cont++){
-				if(eventType != XmlPullParser.START_DOCUMENT){
+				if(eventType == XmlPullParser.START_TAG){
 					String puntuacion=parser.getAttributeValue(null, SCORE2);
+					System.out.println(parser.getAttributeValue(null, SCORE2)+" "+ parser.getAttributeValue(null, USERNAME)+" "+ parser.getAttributeValue(null, RANKING));
 					serializer.startTag(null, SCORE2);
 					if(Integer.parseInt(puntuacion)>this.puntuacion || puntuacionIntroducida){
 						escribirXmlPuntuacionAntigua(serializer, parser, cont,puntuacion);
@@ -503,6 +511,7 @@ public class Play extends Activity {
 			System.out.println(e);
 		} catch (IOException e) {
 			System.out.println(e);
+			primerScore();
 		} catch (XmlPullParserException e) {
 			System.out.println(e);
 		}finally{
@@ -515,6 +524,37 @@ public class Play extends Activity {
 				e.printStackTrace();
 			}
 		}	
+	}
+
+	private void primerScore() {
+		XmlSerializer serialiser = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try {
+			serialiser.setOutput(writer);
+			serialiser.startDocument(null, null);
+			serialiser.startTag(null, SCORES);
+			serialiser.startTag(null, SCORE2);
+			serialiser.attribute(null, USERNAME, recuperarNombreUsuario());
+			serialiser.attribute(null, SCORE2, String.valueOf(puntuacion));
+			serialiser.attribute(null, RANKING, ""+1);
+			serialiser.endTag(null, SCORE2);
+			serialiser.endTag(null, SCORES);
+			serialiser.endDocument();
+			FileOutputStream fos = openFileOutput ("scores.xml",Context.MODE_PRIVATE);
+			fos.write(writer.toString().getBytes());
+			fos.flush();
+			fos.close();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 	private void escribirXmlPuntuacionAntigua(XmlSerializer serializer,
