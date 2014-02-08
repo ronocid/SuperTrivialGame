@@ -111,6 +111,7 @@ public final class R {
     }
     public static final class raw {
         public static final int creditos=0x7f050000;
+        public static final int supertrivialgame=0x7f050001;
     }
     public static final class string {
         public static final int action_help=0x7f070002;
