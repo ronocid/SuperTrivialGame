@@ -1,6 +1,7 @@
 package org.pmm.supertrivialgame;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -71,7 +72,8 @@ public class Play extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_play);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
+		
+		Puntuaciones.limpiarArray();
 		pregunta =(TextView)findViewById(R.id.pregunta);
 		respuesta1=(Button)findViewById(R.id.respuesta1);
 		respuesta2=(Button)findViewById(R.id.respuesta2);
@@ -434,7 +436,7 @@ public class Play extends Activity {
 			                    public void run() { //Realizo la tarea que quiero realizar al acabar el tiempo del schedule (1000ms).
 			                        //Aquí paso a la siguiente pregunta
 			                    	if(preguntas.size()==numPregunta){
-			                    		escribirXMLScore();
+			                    		recuperarXMLScore();
 			                    		Intent i= new Intent(Play.this, Main.class);
 			            				startActivity(i);
 			    					}else{
@@ -466,64 +468,74 @@ public class Play extends Activity {
 		toast.show();
 	}
 	
-	private void escribirXMLScore() {
-		XmlSerializer serializer = Xml.newSerializer();
-		StringWriter writer= new StringWriter();
-		FileInputStream inputStream = null;
-		FileOutputStream fos =null;
-		int eventType = XmlPullParser.START_DOCUMENT;
-		boolean puntuacionIntroducida=false;
-		
+	private void recuperarXMLScore() {
 		try {
-			serializer.setOutput(writer);
-			serializer.startDocument(null, null);
-			serializer.startTag(null, SCORES);
-
-			inputStream=openFileInput("scores.xml");
-			/*XmlPullParser parser = XmlPullParserFactory.newInstance().newPullParser();
-			parser.setInput(inputStream, null);*/
+			FileInputStream inputStream = openFileInput("scores.xml");
 			XmlPullParser parser = Xml.newPullParser();
 			parser.setInput(inputStream, "UTF-8");
+			int eventType = XmlPullParser.START_DOCUMENT;
+			boolean datoIntroducido = false;
 			
-			for(int cont=0;cont<25 && eventType != XmlPullParser.END_DOCUMENT;cont++){
+			while(eventType != XmlPullParser.END_DOCUMENT){
 				if(eventType == XmlPullParser.START_TAG){
-					String puntuacion=parser.getAttributeValue(null, SCORE2);
-					System.out.println(parser.getAttributeValue(null, SCORE2)+" "+ parser.getAttributeValue(null, USERNAME)+" "+ parser.getAttributeValue(null, RANKING));
-					serializer.startTag(null, SCORE2);
-					if(Integer.parseInt(puntuacion)>this.puntuacion || puntuacionIntroducida){
-						escribirXmlPuntuacionAntigua(serializer, parser, cont,puntuacion);
-					}else{
-						puntuacionIntroducida = escribirXmlPuntuacionNueva(serializer, cont);
+					if(parser.getAttributeValue(null,USERNAME)!=null){
+						if(Integer.parseInt(parser.getAttributeValue(null, SCORE2)) >= this.puntuacion || datoIntroducido){
+							Puntuaciones puntuacion=new Puntuaciones(parser.getAttributeValue(null, USERNAME), Integer.parseInt(parser.getAttributeValue(null, SCORE2)));
+						}else{
+							Puntuaciones puntuacion=new Puntuaciones(recuperarNombreUsuario(), this.puntuacion);
+							Puntuaciones punt=new Puntuaciones(parser.getAttributeValue(null, USERNAME), Integer.parseInt(parser.getAttributeValue(null, SCORE2)));
+							datoIntroducido=true;
+						}	
 					}
 				}
-				serializer.endTag(null,SCORE2);
-				eventType =parser.next();
+				eventType = parser.next();
 			}
-			serializer.endTag(null, SCORES);
-			serializer.endDocument();
-			
-			fos = openFileOutput("scores.xml", Context.MODE_PRIVATE);
+			inputStream.close();
+			escribirScores();
+		} catch (FileNotFoundException e) {
+			primerScore();
+			e.printStackTrace();
+		} catch (XmlPullParserException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void escribirScores() {
+		Puntuaciones [] array = Puntuaciones.getDatos();
+		XmlSerializer serialiser = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try {
+			serialiser.setOutput(writer);
+			serialiser.startDocument(null, null);
+			serialiser.startTag(null, SCORES);
+			for(int cont=0;cont<25;cont++){
+				if(array[cont]!= null){
+					serialiser.startTag(null, SCORE2);
+					serialiser.attribute(null, USERNAME, array[cont].getNombre());
+					serialiser.attribute(null, SCORE2, String.valueOf(array[cont].getScore()));
+					serialiser.attribute(null, RANKING, ""+cont+1);
+					
+					serialiser.endTag(null, SCORE2);
+				}
+					
+			}
+			serialiser.endTag(null, SCORES);
+			serialiser.endDocument();
+			FileOutputStream fos = openFileOutput ("scores.xml",Context.MODE_PRIVATE);
 			fos.write(writer.toString().getBytes());
 			fos.flush();
+			fos.close();
 		} catch (IllegalArgumentException e) {
-			System.out.println(e);
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (IllegalStateException e) {
-			System.out.println(e);
+			e.printStackTrace();
 		} catch (IOException e) {
-			System.out.println(e);
-			primerScore();
-		} catch (XmlPullParserException e) {
-			System.out.println(e);
-		}finally{
-			try {
-				if(fos != null)
-					fos.close();
-				if(inputStream != null)
-					inputStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}	
+			e.printStackTrace();
+		}
 	}
 
 	private void primerScore() {
@@ -555,24 +567,6 @@ public class Play extends Activity {
 			e.printStackTrace();
 		}
 		
-	}
-
-	private void escribirXmlPuntuacionAntigua(XmlSerializer serializer,
-			XmlPullParser parser, int cont, String puntuacion)
-			throws IOException {
-		serializer.attribute(null, USERNAME, parser.getAttributeValue(null, USERNAME));
-		serializer.attribute(null, SCORE2, String.valueOf(puntuacion));
-		serializer.attribute(null, RANKING, String.valueOf(cont+1));
-	}
-
-	private boolean escribirXmlPuntuacionNueva(XmlSerializer serializer,
-			int cont) throws IOException {
-		boolean puntuacionIntroducida;
-		serializer.attribute(null, USERNAME, recuperarNombreUsuario());
-		serializer.attribute(null, SCORE2, String.valueOf(this.puntuacion));
-		serializer.attribute(null, RANKING, String.valueOf(cont+1));
-		puntuacionIntroducida=true;
-		return puntuacionIntroducida;
 	}
 
 	private String recuperarNombreUsuario() {
