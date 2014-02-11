@@ -11,12 +11,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,10 +21,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -44,7 +38,6 @@ import android.widget.Toast;
 
 public class Play extends Activity {
 
-	private static final String PATH_DATA = "/data/data/org.pmm.supertrivialgame/databases/supertrivialgame.db";
 	private static final String SCORES = "scores";
 	private static final String RANKING = "ranking";
 	private static final String SCORE2 = "score";
@@ -68,7 +61,8 @@ public class Play extends Activity {
 	Tiempo hiloTiempo;
 	private int puntuacion;
 	private boolean comodin=false;
-	
+	private int progress=0;
+	SharedPreferences preferencias;
 
 	protected void onStop() {
 		hiloTiempo.cancel(true);//Esto evita un error al volver atras
@@ -79,7 +73,7 @@ public class Play extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_play);
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		//setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		
 		Puntuaciones.limpiarArray();
 		pregunta =(TextView)findViewById(R.id.pregunta);
@@ -91,10 +85,19 @@ public class Play extends Activity {
 		barraTiempo=(ProgressBar)findViewById(R.id.progressBar1);
 		puntuacion=0;
 		
-		inicializarPreguntas();
-		Collections.shuffle(preguntas);//ordena aleatoriamente el arraylist
+		preferencias= getSharedPreferences("settings", MODE_PRIVATE);
+		if(preferencias !=null &&preferencias.getBoolean("voltear", false)){
+			recargarActividad();
+			preguntas= Question.getPreguntas();
+			if(preguntas == null)
+				inicializarPreguntas();
+		}else{
+			inicializarPreguntas();
+			Collections.shuffle(preguntas);//ordena aleatoriamente el arraylist
+			Question.setPreguntas(preguntas);
+		}
+		score.setText("Score: "+puntuacion);
 		realizarPregunta();
-		
 		respuesta1.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -253,6 +256,12 @@ public class Play extends Activity {
 		});
 	}
 	
+	private void recargarActividad() {
+		puntuacion=preferencias.getInt("puntuacion", 0);
+		numPregunta=preferencias.getInt("numeroPregunta", 0);
+		progress=preferencias.getInt("tiempo", 0);
+	}
+
 	private void realizarPregunta() {
 		botonesVisible();
 		respuesta1.setTextColor(Color.BLACK);
@@ -284,49 +293,39 @@ public class Play extends Activity {
 	
 	private void inicializarPreguntas() {
 		preguntas=new ArrayList <Question>();
-		//preguntas.add(new Question("Geografía","¿Qué línea imaginaria de la tierra está marcada por el monolito Jujuy?",new String[]{"El Trópico de Sagitario","El Trópico de Aries","El Trópico de Virgo","El Trópico de Capricornio"},3,1));
-		//preguntas.add(new Question("Espectáculos","¿En qué película aparecían The Beatles en dibujos animados?",new String[]{"Yellow submarine","A Hard Day’s Night","Magical Mystery Tour","Help!"},0,3));
-		//preguntas.add(new Question("Historia","¿Por qué cruz pasó a la historia Henri Dunant?",new String[]{"Cruz de Occitania","Cruz Roja","Cruz de Borgoña","Cruz del calvario"},1,0));
-		//preguntas.add(new Question("Geografía","¿Cómo se llama el mar que separa Argentina de las islas Malvinas?",new String[]{"Mar Argentino","Mar de la Plata","Mar Malvino","Mar del Tucumán"},0,3));
-		//preguntas.add(new Question("Arte y Literatura","¿A qué poeta debemos el Llanto por Ignacio Sánchez Mejías?",new String[]{"Miguel Hernández","García Lorca","Pablo Neruda","Rafael Alberti"},1,2));
-		//preguntas.add(new Question("Ciencias y Naturaleza","¿Qué miembros de una colmena se alimentan con jalea real?",new String[]{"Las larvas","Los zánganos","La reina","Las obreras"},0,2));
-		//preguntas.add(new Question("Historia","¿Quién fue el legislador ateniense más famoso por la severidad de sus penas?",new String[]{"Platón","Salaminia","Dracón","Aristóteles"},2,1));
-		//preguntas.add(new Question("Arte y Literatura","¿En qué café dirigió una famosa tertulia literaria Ramón Gómez de la Serna?",new String[]{"Café Madrid","Café Pombo","Café Gijón","Café Cibeles"},1,3));
-		//preguntas.add(new Question("Ocio y Deportes","¿Qué equipo de fútbol español fue el primero en llevarse a sus vitrinas la Supercopa de Europa?",new String[]{"Real Madrid","Valencia","Fc Barcelona","Atlético de Madrid"},1,2));
-		//preguntas.add(new Question("Historia","¿En qué país 100.000 personas protagonizaron La Larga Marcha?",new String[]{"India","Rusia","China","Indonesia"},2,0));
-		//preguntas.add(new Question("Espectáculos","¿Quién dirigió primero Tesis y después Abre los ojos?",new String[]{"Álex de la Iglesia","Alejandro Amenábar","Eduardo Noriega","Mateo Gil"},1,0));
-		//preguntas.add(new Question("Arte y Literatura","¿Quién escribió un Viaje a la Luna y la Historia cómica de los estados e imperios del Sol?",new String[]{"Cyrano de Bergerac","Julio Verne","Victor Hugo","H. G. Wells"},0,1));
-		
+			
 		SQLiteDatabase db=null;
 		try{
-			db= SQLiteDatabase.openDatabase(PATH_DATA, null, SQLiteDatabase.OPEN_READONLY | SQLiteDatabase.NO_LOCALIZED_COLLATORS);
+			db= SQLiteDatabase.openDatabase(this.getFilesDir().getPath()+"/supertrivialgame.db", null, SQLiteDatabase.OPEN_READONLY | SQLiteDatabase.NO_LOCALIZED_COLLATORS);
 		}catch(SQLiteException e){
+			System.out.println("database SQLITE "+e);
 			try {
 				db=null;
-				OutputStream dataOS = new FileOutputStream (PATH_DATA);
+				OutputStream dataOS = new FileOutputStream (this.getFilesDir().getPath()+"/supertrivialgame.db");
 				InputStream dataIS;
-				
+					
 				byte[] buffer = new byte[1024];
-				int length;
 				dataIS=this.getResources().openRawResource(R.raw.supertrivialgame);
-				while((length = dataIS.read(buffer))>0){
+				while(dataIS.read(buffer)>0){
 					dataOS.write(buffer);
 				}
 				dataIS.close();
 				dataOS.flush();
 				dataOS.close();
-				
-				db= SQLiteDatabase.openDatabase(PATH_DATA, null, SQLiteDatabase.OPEN_READONLY | SQLiteDatabase.NO_LOCALIZED_COLLATORS);
+						
+				db= SQLiteDatabase.openDatabase(this.getFilesDir().getPath()+"/supertrivialgame.db", null, SQLiteDatabase.OPEN_READONLY | SQLiteDatabase.NO_LOCALIZED_COLLATORS);
 			} catch (FileNotFoundException e1) {
-				e1.printStackTrace();
+				System.out.println("database FileNotFound "+e);					
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				System.out.println("database IOE "+e);
 			}
 		}
 		if(db!=null){
 			Cursor c1=db.rawQuery("Select * from questions", null);
-			while(c1.moveToNext()){
+			int cont=0;
+			while(c1.moveToNext() && cont<5){
 				preguntas.add(new Question(c1.getString(1),c1.getString(2),new String[]{c1.getString(3),c1.getString(4),c1.getString(5),c1.getString(6)},c1.getInt(7),c1.getInt(8)));
+				cont++;
 			}
 		}
 	}
@@ -370,12 +369,11 @@ public class Play extends Activity {
 		private static final String SE_ACABO_EL_TIEMPO = "Se acabo el tiempo";
 		private static final String ACABO_EL_TIEMPO_UTLIMA_PREGUNTA = "Se acabo el tiempo. Era la utlima pregunta. Tu puntuación es: ";
 		private static final String TIEMPO = "Tiempo";
-		private int progress;
 		private int cont;
 		
 		@Override
 		protected void onPreExecute() {
-			progress=0;	
+			progress=0;
 			cont=0;
 		}
 		
@@ -388,7 +386,7 @@ public class Play extends Activity {
 								publishProgress(cont);
 								Thread.sleep(2000);
 							}catch(Exception e){
-								System.out.println("Error "+e);
+								System.out.println("AsyncTask "+e);
 							}
 						}
 						comodin=false;
@@ -397,7 +395,7 @@ public class Play extends Activity {
 					try{
 						Thread.sleep(100);
 					}catch(Exception e){
-						System.out.println("Error "+e);
+						System.out.println("AsyncTask "+e);
 					}
 					publishProgress(progress);
 				}
@@ -424,8 +422,6 @@ public class Play extends Activity {
 				dialogRespuesta(TIEMPO, SE_ACABO_EL_TIEMPO);
 			}
 		}	
-		
-		
 	}
 	
 	private void respuesta4Correcta() {
@@ -478,8 +474,9 @@ public class Play extends Activity {
 			                        //Aquí paso a la siguiente pregunta
 			                    	if(preguntas.size()==numPregunta){
 			                    		recuperarXMLScore();
-			                    		Intent i= new Intent(Play.this, Main.class);
-			            				startActivity(i);
+			                    		/*Intent i= new Intent(Play.this, Main.class);
+			            				startActivity(i);*/
+			            				finish();
 			    					}else{
 			    						realizarPregunta();
 			    					}
@@ -521,10 +518,10 @@ public class Play extends Activity {
 				if(eventType == XmlPullParser.START_TAG){
 					if(parser.getAttributeValue(null,USERNAME)!=null){
 						if(Integer.parseInt(parser.getAttributeValue(null, SCORE2)) >= this.puntuacion || datoIntroducido){
-							Puntuaciones puntuacion=new Puntuaciones(parser.getAttributeValue(null, USERNAME), Integer.parseInt(parser.getAttributeValue(null, SCORE2)));
+							new Puntuaciones(parser.getAttributeValue(null, USERNAME), Integer.parseInt(parser.getAttributeValue(null, SCORE2)));
 						}else{
-							Puntuaciones puntuacion=new Puntuaciones(recuperarNombreUsuario(), this.puntuacion);
-							Puntuaciones punt=new Puntuaciones(parser.getAttributeValue(null, USERNAME), Integer.parseInt(parser.getAttributeValue(null, SCORE2)));
+							new Puntuaciones(recuperarNombreUsuario(), this.puntuacion);
+							new Puntuaciones(parser.getAttributeValue(null, USERNAME), Integer.parseInt(parser.getAttributeValue(null, SCORE2)));
 							datoIntroducido=true;
 						}	
 					}
@@ -535,12 +532,11 @@ public class Play extends Activity {
 			escribirScores();
 		} catch (FileNotFoundException e) {
 			primerScore();
-			e.printStackTrace();
+			System.out.println("XML FileNotFound "+e);
 		} catch (XmlPullParserException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("XML PullParser "+e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("XML IO "+e);
 		}
 	}
 
@@ -570,12 +566,11 @@ public class Play extends Activity {
 			fos.flush();
 			fos.close();
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("XML IllegalArgument "+e);
 		} catch (IllegalStateException e) {
-			e.printStackTrace();
+			System.out.println("XML IlegalState "+e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("XML IO "+e);
 		}
 	}
 
@@ -598,14 +593,11 @@ public class Play extends Activity {
 			fos.flush();
 			fos.close();
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("XML IllegalArgument "+e);
 		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("XML IllegalState "+e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("XML IO "+e);
 		}
 		
 	}
@@ -615,5 +607,28 @@ public class Play extends Activity {
 		return preferencias.getString("nombre", "Usuario1");
 	}
 
+	@Override
+	protected void onPause() {
+		super.onPause();
+		SharedPreferences preferences= getSharedPreferences("settings", MODE_PRIVATE);
+		SharedPreferences.Editor editor=preferences.edit();
+		if(!isFinishing()){
+			editor.putBoolean("voltear", true);
+			editor.putInt("puntuacion", this.puntuacion );
+			editor.putInt("numeroPregunta", this.numPregunta-1);
+			editor.putInt("tiempo", barraTiempo.getProgress());
+		}else{
+			editor.putBoolean("voltear", false);
+		}
+		editor.commit();
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		finish();
+	}
+	
+	
 
 }

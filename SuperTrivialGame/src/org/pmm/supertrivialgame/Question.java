@@ -1,5 +1,7 @@
 package org.pmm.supertrivialgame;
 
+import java.util.ArrayList;
+
 public class Question {
 
 	String subject;
@@ -7,6 +9,7 @@ public class Question {
 	String[] answers;
 	int rightAnswer;
 	int help;
+	private static ArrayList <Question> preguntas=null;
 	
 	public Question(String subject, String questionText, String[] answers,int rightAnswer,int help){
 		this.subject=subject;
@@ -46,5 +49,11 @@ public class Question {
 	}
 	public void setHelp(int help) {
 		this.help = help;
+	}
+	public static ArrayList <Question> getPreguntas(){
+		return preguntas;
+	}
+	public static void setPreguntas(ArrayList <Question> nuevasPreguntas){
+		preguntas=nuevasPreguntas;
 	}
 }

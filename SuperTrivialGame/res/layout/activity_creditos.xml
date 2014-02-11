@@ -21,13 +21,17 @@
 
     <TextView
         android:id="@+id/textView1"
-        style="@style/LetrasCredits"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/imageView1"
         android:layout_centerHorizontal="true"
+        android:shadowDx="2"
+        android:shadowDy="4"
+        android:shadowRadius="3"
         android:text="@string/title_activity_creditos"
-        android:textSize="28sp" />
+        android:textColor="#4C2B6B"
+        android:textSize="28sp"
+        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -40,17 +44,20 @@
 
     <TextView
         android:id="@+id/textViewDescripcion"
-        style="@style/LetrasCredits"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView1"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="39dp"
         android:text="TextView" 
-        android:gravity ="center"/>
+        android:gravity ="center"
+        android:textColor="#4C2B6B"
+        android:textStyle="bold"
+        android:shadowRadius="3"
+        android:shadowDx="2"
+        android:shadowDy="4"/>
 
     <TextView
-        style="@style/LetrasCredits"
         android:id="@+id/textViewAutores"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -58,6 +65,11 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="59dp"
         android:text="TextView" 
-        android:gravity ="center"/>
+        android:gravity ="center"
+        android:textColor="#4C2B6B"
+        android:textStyle="bold"
+        android:shadowRadius="3"
+        android:shadowDx="2"
+        android:shadowDy="4"/>
 
 </RelativeLayout>

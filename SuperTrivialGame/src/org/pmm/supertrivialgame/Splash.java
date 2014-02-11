@@ -11,7 +11,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class Splash extends Activity {
+public class Splash extends Musica {
 	private ImageView iz;
 	private ImageView der;
 	
@@ -25,6 +25,7 @@ public class Splash extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash);
+		
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		
 		ImageView azul=(ImageView)findViewById(R.id.azul);
@@ -65,7 +66,7 @@ public class Splash extends Activity {
 		
 		TextView texto2=(TextView)findViewById(R.id.textViewTextoTitulo2);
 		texto2.setAnimation(animtexto);
-		
+		comenzarMusicaPrincipal();
 		
 		animtexto.setAnimationListener(new AnimationListener(){
 

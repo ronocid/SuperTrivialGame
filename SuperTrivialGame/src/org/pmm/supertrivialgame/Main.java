@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class Main extends Activity {
+public class Main extends Musica {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +29,7 @@ public class Main extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent i=new Intent(Main.this, Play.class);
+				pausarMusicaPrincipal();
 				startActivity(i);
 			}
 		});

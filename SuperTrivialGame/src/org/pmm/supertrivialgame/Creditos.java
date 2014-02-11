@@ -11,7 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-public class Creditos extends Activity {
+public class Creditos extends Musica {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -22,9 +22,7 @@ public class Creditos extends Activity {
 		TextView descripcion= (TextView)findViewById(R.id.textViewDescripcion);
 		TextView autores=(TextView)findViewById(R.id.textViewAutores);
 		try{
-			/*File f= new File(getResources().openRawResource(R.raw.creditos));
-			FileInputStream file=openFileInput();*/
-			Scanner lectura=new Scanner(getResources().openRawResource(R.raw.creditos));
+			Scanner lectura=new Scanner(getResources().openRawResource(R.raw.creditos),"UTF-8");
 			String lecturalinea="";
 			while(lectura.hasNext()){
 				lecturalinea=lectura.nextLine();
