@@ -17,10 +17,11 @@ import org.xmlpull.v1.XmlSerializer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -36,7 +37,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Play extends Activity {
+public class Play extends Musica {
 
 	private static final String SCORES = "scores";
 	private static final String RANKING = "ranking";
@@ -74,6 +75,7 @@ public class Play extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_play);
 		//setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+	
 		
 		Puntuaciones.limpiarArray();
 		pregunta =(TextView)findViewById(R.id.pregunta);
@@ -85,7 +87,7 @@ public class Play extends Activity {
 		barraTiempo=(ProgressBar)findViewById(R.id.progressBar1);
 		puntuacion=0;
 		
-		preferencias= getSharedPreferences("settings", MODE_PRIVATE);
+		preferencias= getSharedPreferences("play", MODE_PRIVATE);
 		if(preferencias !=null &&preferencias.getBoolean("voltear", false)){
 			recargarActividad();
 			preguntas= Question.getPreguntas();
@@ -98,6 +100,7 @@ public class Play extends Activity {
 		}
 		score.setText("Score: "+puntuacion);
 		realizarPregunta();
+		
 		respuesta1.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -259,7 +262,6 @@ public class Play extends Activity {
 	private void recargarActividad() {
 		puntuacion=preferencias.getInt("puntuacion", 0);
 		numPregunta=preferencias.getInt("numeroPregunta", 0);
-		progress=preferencias.getInt("tiempo", 0);
 	}
 
 	private void realizarPregunta() {
@@ -371,9 +373,13 @@ public class Play extends Activity {
 		private static final String TIEMPO = "Tiempo";
 		private int cont;
 		
+		@SuppressLint("CommitPrefEdits")
 		@Override
 		protected void onPreExecute() {
-			progress=0;
+			progress=preferencias.getInt("tiempo", 0);
+			SharedPreferences.Editor editor = preferencias.edit();
+			editor.putInt("tiempo", -1);
+			editor.commit();
 			cont=0;
 		}
 		
@@ -474,8 +480,10 @@ public class Play extends Activity {
 			                        //Aquí paso a la siguiente pregunta
 			                    	if(preguntas.size()==numPregunta){
 			                    		recuperarXMLScore();
-			                    		/*Intent i= new Intent(Play.this, Main.class);
-			            				startActivity(i);*/
+			                    		terminarMusicaPlay();
+			                    		reanudarMusicaPrincipal();
+			                    		Intent i= new Intent(Play.this, Main.class);
+			            				startActivity(i);
 			            				finish();
 			    					}else{
 			    						realizarPregunta();
@@ -610,8 +618,7 @@ public class Play extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		SharedPreferences preferences= getSharedPreferences("settings", MODE_PRIVATE);
-		SharedPreferences.Editor editor=preferences.edit();
+		SharedPreferences.Editor editor=preferencias.edit();
 		if(!isFinishing()){
 			editor.putBoolean("voltear", true);
 			editor.putInt("puntuacion", this.puntuacion );
@@ -626,9 +633,10 @@ public class Play extends Activity {
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
+		terminarMusicaPlay();
+		reanudarMusicaPrincipal();
 		finish();
 	}
 	
 	
-
 }

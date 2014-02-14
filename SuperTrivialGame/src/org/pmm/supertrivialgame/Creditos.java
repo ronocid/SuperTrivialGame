@@ -3,7 +3,6 @@ package org.pmm.supertrivialgame;
 import java.util.Scanner;
 
 import android.os.Bundle;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.pm.ActivityInfo;
@@ -37,7 +36,6 @@ public class Creditos extends Musica {
 		}catch(Exception e){
 			System.out.println(e);
 		}
-
 	}
 
 	@Override

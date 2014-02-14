@@ -1,10 +1,9 @@
 package org.pmm.supertrivialgame;
 
 import android.os.Bundle;
-import android.app.Activity;
 import android.view.Menu;
 
-public class Scores extends Activity {
+public class Scores extends Musica {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

@@ -19,7 +19,7 @@ public class Main extends Musica {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		
+				
 		Button botonPlay =(Button)findViewById(R.id.button1);
 		Button botonCreditos =(Button)findViewById(R.id.button3);
 		Button botonScore =(Button)findViewById(R.id.button2);
@@ -29,6 +29,7 @@ public class Main extends Musica {
 			@Override
 			public void onClick(View v) {
 				Intent i=new Intent(Main.this, Play.class);
+				comenzarMusicaPlay();
 				pausarMusicaPrincipal();
 				startActivity(i);
 			}
@@ -80,5 +81,9 @@ public class Main extends Musica {
 		}
 	}
 
-
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		terminarMusicaPrincipal();
+	}
 }

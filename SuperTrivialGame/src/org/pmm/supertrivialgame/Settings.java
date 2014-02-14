@@ -1,7 +1,6 @@
 package org.pmm.supertrivialgame;
 
 import android.os.Bundle;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -15,7 +14,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-public class Settings extends Activity {
+public class Settings extends Musica {
 	private EditText nombre;
 	private EditText email;
 	private String[] datosQuestionPreferences;

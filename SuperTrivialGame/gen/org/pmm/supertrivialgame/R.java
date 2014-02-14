@@ -82,7 +82,7 @@ public final class R {
         public static final int respuesta3=0x7f0b000e;
         public static final int respuesta4=0x7f0b000f;
         public static final int rojo=0x7f0b001d;
-        public static final int score=0x7f0b0008;
+        public static final int score=0x7f0b0009;
         public static final int spinner1=0x7f0b0017;
         public static final int textView1=0x7f0b0001;
         public static final int textView2=0x7f0b0010;
@@ -94,7 +94,7 @@ public final class R {
         public static final int textViewDescripcion=0x7f0b0003;
         public static final int textViewTextoTitulo1=0x7f0b0021;
         public static final int textViewTextoTitulo2=0x7f0b0022;
-        public static final int time=0x7f0b0009;
+        public static final int time=0x7f0b0008;
         public static final int verde=0x7f0b001e;
     }
     public static final class layout {
@@ -114,9 +114,10 @@ public final class R {
         public static final int splash=0x7f0a0005;
     }
     public static final class raw {
-        public static final int creditos=0x7f050000;
-        public static final int secuencia=0x7f050001;
-        public static final int supertrivialgame=0x7f050002;
+        public static final int clock=0x7f050000;
+        public static final int creditos=0x7f050001;
+        public static final int secuencia=0x7f050002;
+        public static final int supertrivialgame=0x7f050003;
     }
     public static final class string {
         public static final int action_help=0x7f080002;
