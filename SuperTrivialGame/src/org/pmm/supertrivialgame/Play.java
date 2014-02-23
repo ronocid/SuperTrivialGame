@@ -106,10 +106,12 @@ public class Play extends Musica {
 			@Override
 			public void onClick(View v) {
 				hiloTiempo.cancel(true);
+				pausarMusicaPlay();
 				if(question.getRightAnswer()==0){
 					puntuacion+=(100-barraTiempo.getProgress())*10;
 					score.setText("Score: "+puntuacion);
 					respuesta1Correcta();
+					comenzarMusicaAcierto();
 					if(preguntas.size()==numPregunta){
 						dialogRespuesta(RESPUESTA,CORRECTA_UTLIMA_PREGUNTA+puntuacion);
 					}else{
@@ -117,6 +119,7 @@ public class Play extends Musica {
 					}
 				}else if(question.getRightAnswer()==1){
 					respuesta2Correcta();
+					comenzarMusicaFallo();
 					if(preguntas.size()==numPregunta){
 						dialogRespuesta(RESPUESTA,ERRONEA_UTLIMA_PREGUNTA+puntuacion);
 					}else{
@@ -124,6 +127,7 @@ public class Play extends Musica {
 					}
 				}else if(question.getRightAnswer()==2){
 					respuesta3Correcta();
+					comenzarMusicaFallo();
 					if(preguntas.size()==numPregunta){
 						dialogRespuesta(RESPUESTA,ERRONEA_UTLIMA_PREGUNTA+puntuacion);
 					}else{
@@ -131,6 +135,7 @@ public class Play extends Musica {
 					}
 				}else if(question.getRightAnswer()==3){
 					respuesta4Correcta();
+					comenzarMusicaFallo();
 					if(preguntas.size()==numPregunta){
 						dialogRespuesta(RESPUESTA,ERRONEA_UTLIMA_PREGUNTA+puntuacion);
 					}else{
@@ -146,10 +151,12 @@ public class Play extends Musica {
 			@Override
 			public void onClick(View v) {
 				hiloTiempo.cancel(true);
+				pausarMusicaPlay();
 				if(question.getRightAnswer()==1){
 					puntuacion+=(100-barraTiempo.getProgress())*10;
 					score.setText("Score: "+puntuacion);
 					respuesta2Correcta();
+					comenzarMusicaAcierto();
 					if(preguntas.size()==numPregunta){
 						dialogRespuesta(RESPUESTA,CORRECTA_UTLIMA_PREGUNTA+puntuacion);
 					}else{
@@ -157,6 +164,7 @@ public class Play extends Musica {
 					}
 				}else if(question.getRightAnswer()==0){
 					respuesta1Correcta();
+					comenzarMusicaFallo();
 					if(preguntas.size()==numPregunta){
 						dialogRespuesta(RESPUESTA,ERRONEA_UTLIMA_PREGUNTA+puntuacion);
 					}else{
@@ -164,6 +172,7 @@ public class Play extends Musica {
 					}
 				}else if(question.getRightAnswer()==2){
 					respuesta3Correcta();
+					comenzarMusicaFallo();
 					if(preguntas.size()==numPregunta){
 						dialogRespuesta(RESPUESTA,ERRONEA_UTLIMA_PREGUNTA+puntuacion);
 					}else{
@@ -171,6 +180,7 @@ public class Play extends Musica {
 					}
 				}else if(question.getRightAnswer()==3){
 					respuesta4Correcta();
+					comenzarMusicaFallo();
 					if(preguntas.size()==numPregunta){
 						dialogRespuesta(RESPUESTA,ERRONEA_UTLIMA_PREGUNTA+puntuacion);
 					}else{
@@ -185,10 +195,12 @@ public class Play extends Musica {
 			@Override
 			public void onClick(View v) {
 				hiloTiempo.cancel(true);
+				pausarMusicaPlay();
 				if(question.getRightAnswer()==2){
 					puntuacion+=(100-barraTiempo.getProgress())*10;
 					score.setText("Score: "+puntuacion);
 					respuesta3Correcta();
+					comenzarMusicaAcierto();
 					if(preguntas.size()==numPregunta){
 						dialogRespuesta(RESPUESTA,CORRECTA_UTLIMA_PREGUNTA+puntuacion);
 					}else{
@@ -196,6 +208,7 @@ public class Play extends Musica {
 					}
 				}else if(question.getRightAnswer()==1){
 					respuesta2Correcta();
+					comenzarMusicaFallo();
 					if(preguntas.size()==numPregunta){
 						dialogRespuesta(RESPUESTA,ERRONEA_UTLIMA_PREGUNTA+puntuacion);
 					}else{
@@ -203,6 +216,7 @@ public class Play extends Musica {
 					}
 				}else if(question.getRightAnswer()==0){
 					respuesta1Correcta();
+					comenzarMusicaFallo();
 					if(preguntas.size()==numPregunta){
 						dialogRespuesta(RESPUESTA,ERRONEA_UTLIMA_PREGUNTA+puntuacion);
 					}else{
@@ -210,6 +224,7 @@ public class Play extends Musica {
 					}
 				}else if(question.getRightAnswer()==3){
 					respuesta4Correcta();
+					comenzarMusicaFallo();
 					if(preguntas.size()==numPregunta){
 						dialogRespuesta(RESPUESTA,ERRONEA_UTLIMA_PREGUNTA+puntuacion);
 					}else{
@@ -224,10 +239,12 @@ public class Play extends Musica {
 			@Override
 			public void onClick(View v) {
 				hiloTiempo.cancel(true);
+				pausarMusicaPlay();
 				if(question.getRightAnswer()==3){
 					puntuacion+=(100-barraTiempo.getProgress())*10;
 					score.setText("Score: "+puntuacion);
 					respuesta4Correcta();
+					comenzarMusicaAcierto();
 					if(preguntas.size()==numPregunta){
 						dialogRespuesta(RESPUESTA,CORRECTA_UTLIMA_PREGUNTA+puntuacion);
 					}else{
@@ -235,6 +252,7 @@ public class Play extends Musica {
 					}
 				}else if(question.getRightAnswer()==1){
 					respuesta2Correcta();
+					comenzarMusicaFallo();
 					if(preguntas.size()==numPregunta){
 						dialogRespuesta(RESPUESTA,ERRONEA_UTLIMA_PREGUNTA+puntuacion);
 					}else{
@@ -242,6 +260,7 @@ public class Play extends Musica {
 					}
 				}else if(question.getRightAnswer()==2){
 					respuesta3Correcta();
+					comenzarMusicaFallo();
 					if(preguntas.size()==numPregunta){
 						dialogRespuesta(RESPUESTA,ERRONEA_UTLIMA_PREGUNTA+puntuacion);
 					}else{
@@ -249,6 +268,7 @@ public class Play extends Musica {
 					}
 				}else if(question.getRightAnswer()==0){
 					respuesta1Correcta();
+					comenzarMusicaFallo();
 					if(preguntas.size()==numPregunta){
 						dialogRespuesta(RESPUESTA,ERRONEA_UTLIMA_PREGUNTA+puntuacion);
 					}else{
@@ -265,6 +285,7 @@ public class Play extends Musica {
 	}
 
 	private void realizarPregunta() {
+		comenzarMusicaPlay();
 		botonesVisible();
 		respuesta1.setTextColor(Color.BLACK);
 		respuesta2.setTextColor(Color.BLACK);

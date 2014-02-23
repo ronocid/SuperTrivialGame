@@ -63,16 +63,23 @@ public class Musica extends Activity{
 		}
 	}
 	
+	public void pausarMusicaPlay() {
+		mpPlay.pause();		
+	}
+	
+	public void reanudarMusicaPlay(){
+		mpPlay.start();
+	}
+	
 	public void terminarMusicaPlay() {
 		mpPlay.release();		
 	}
 	
 	public void comenzarMusicaAcierto(){
 		try{
-			mpAcierto = MediaPlayer.create(this,R.raw.secuencia);
+			mpAcierto = MediaPlayer.create(this,R.raw.acierto);
 			//mpAcierto.prepareAsync();
 			mpAcierto.start();
-			mpAcierto.setLooping(true);
 		}catch(Exception e){
 			System.out.println(e);
 		}
@@ -80,10 +87,9 @@ public class Musica extends Activity{
 	
 	public void comenzarMusicaFallo(){
 		try{
-			mpFallo = MediaPlayer.create(this,R.raw.secuencia);
+			mpFallo = MediaPlayer.create(this,R.raw.fallo);
 			//mpFallo.prepareAsync();
 			mpFallo.start();
-			mpFallo.setLooping(true);
 		}catch(Exception e){
 			System.out.println(e);
 		}

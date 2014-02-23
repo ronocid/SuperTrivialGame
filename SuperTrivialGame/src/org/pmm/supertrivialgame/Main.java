@@ -29,7 +29,6 @@ public class Main extends Musica {
 			@Override
 			public void onClick(View v) {
 				Intent i=new Intent(Main.this, Play.class);
-				comenzarMusicaPlay();
 				pausarMusicaPrincipal();
 				startActivity(i);
 			}
