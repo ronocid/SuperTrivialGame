@@ -35,8 +35,10 @@
     <string name="title_activity_creditos">Creditos</string>
     <string name="comodin">Comodin</string>
     <string name="title_activity_scores">Scores</string>
-	<string name="user">User Name</string>
-	<string name="ranking">Ranking</string>
-	<string name="puntuacion">Score</string>
-	<string name="tituloScore">SCORES</string>
+    <string name="score_username">User name</string>
+	<string name="score_score">Score</string>
+	<string name="score_ranking">Ranking</string>
+	<string name="tab_tab1">Local users</string>
+	<string name="tab_tab2">User Friends</string>
+
 </resources>

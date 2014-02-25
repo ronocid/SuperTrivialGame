@@ -1,124 +1,115 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:android1="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/fondo"
-    android:orientation="vertical" >
+<?xml version="1.0" encoding="utf-8"?>  
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/fondo"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context=".Scores" >
     
-    <RelativeLayout
-            android1:layout_width="match_parent"
-            android1:layout_height="wrap_content">
+<TabHost android:id="@android:id/tabhost"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent">
+ 
+     <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
 
-    <TextView
-        android1:id="@+id/titulo"
-        style="@style/LetrasScore"
-        android1:layout_width="wrap_content"
-        android1:layout_height="wrap_content"
-        android1:layout_alignBottom="@+id/imageView1"
-        android1:layout_centerHorizontal="true"
-        android1:text="@string/tituloScore"
-        android1:textSize="28sp" />
-
-    <ImageView
-        android1:id="@+id/imageView2"
-        android1:layout_width="wrap_content"
-        android1:layout_height="wrap_content"
-        android1:layout_alignParentTop="true"
-        android1:layout_marginLeft="14dp"
-        android1:layout_toRightOf="@+id/titulo"
-        android1:src="@drawable/questionblue4" />
-
-    <ImageView
-        android1:id="@+id/imageView1"
-        android1:layout_width="wrap_content"
-        android1:layout_height="wrap_content"
-        android1:layout_alignParentTop="true"
-        android1:layout_toLeftOf="@+id/titulo"
-        android1:src="@drawable/questionblue4" />
-
-    </RelativeLayout>
-
-    <TabHost
-        android1:id="@android:id/tabhost"
-        android1:layout_width="match_parent"
-        android1:layout_height="match_parent" >
-
-        <LinearLayout
-            android1:layout_width="match_parent"
-            android1:layout_height="match_parent"
-            android1:orientation="vertical" >
-
-            <TabWidget
-                android1:id="@android:id/tabs"
-                android1:layout_width="match_parent"
-                android1:layout_height="wrap_content" >
-            </TabWidget>
-
-            <FrameLayout
-                android1:id="@android:id/tabcontent"
-                android1:layout_width="match_parent"
-                android1:layout_height="match_parent" >
-
-                <LinearLayout
-                    android1:id="@+id/local"
-                    android1:layout_width="match_parent"
-                    android1:layout_height="match_parent" 
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="37dp" >
-
-                    <TextView
-                        style="@style/LetrasScore"
-                        android:id="@+id/textView3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="15pt"
-                        android:paddingRight="15pt"
-                        android:text="@string/user" 
-                        android:textSize="15sp"/>
-
-                    <TextView
-                        style="@style/LetrasScore"
-                        android:id="@+id/textView1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingRight="15pt"
-                        android:text="@string/puntuacion" 
-                        android:textSize="15sp"/>
-
-                    <TextView
-                        style="@style/LetrasScore"
-                        android:id="@+id/textView4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingRight="10pt"
-                        android:text="@string/ranking" 
-                        android:textSize="15sp"/>
-                </LinearLayout>
-                
+         <TabWidget
+             android:id="@android:id/tabs"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="40dp" >
+         </TabWidget>
+ 
+         <FrameLayout android:layout_width="fill_parent"
+                  android:layout_height="fill_parent"
+                  android:id="@android:id/tabcontent" >
+ 
+            <LinearLayout android:id="@+id/tab1"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent" >
+ 			
                 <ScrollView
                     android:id="@+id/scrollView1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" >
+                
+                <TableLayout 
+                    	android:layout_marginRight="20dp"
+    					android:id="@+id/table"
+    					android:layout_width="fill_parent"
+   						 android:layout_height="fill_parent"
+   						 android:stretchColumns="1">
+   						 <TableRow>
+   						     <TextView android:id="@+id/textViewUser"
+                      			style="@style/LetrasScore"
+                      			android:text="User Name"
+                      			android:layout_width="wrap_content"
+                      			android:layout_height="wrap_content" 
+                      			android:gravity="center"/>
+   						     <TextView android:id="@+id/textViewScore"
+                      			android:text="Score"
+                      			style="@style/LetrasScore"
+                      			android:layout_width="wrap_content"
+                      			android:layout_height="wrap_content"
+                      			android:gravity="center" />
+   						     <TextView android:id="@+id/textViewRanking"
+                      			android:text="Ranking"
+                      			style="@style/LetrasScore"
+                      			android:layout_width="wrap_content"
+                      			android:layout_height="wrap_content" 
+                      			android:gravity="center"/>
+   						 </TableRow>
 
-                    <TableLayout
-                        android:id="@+id/table"
-                        android:layout_width="match_parent"
-                        android:layout_height="376dp" >
-
-                    </TableLayout>
-
-                </ScrollView>
-				</LinearLayout>
-                <LinearLayout
-                    android1:id="@+id/friend"
-                    android1:layout_width="match_parent"
-                    android1:layout_height="match_parent" 
-                    android:orientation="vertical">
-                </LinearLayout>
-            </FrameLayout>
+              	</TableLayout >
+              	</ScrollView>
+                  
         </LinearLayout>
-    </TabHost>
+ 
+            <LinearLayout android:id="@+id/tab2"
+             
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent" >
+ 
+                <TextView android:id="@+id/textView2"
+                      android:text="Contenido Tab 2"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content" />
+        </LinearLayout>
+         </FrameLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/username"
+        style="@style/LetrasScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_alignBottom="@+id/imageView2"
+        android:text="SCORES"
+        android:textSize="28sp" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:src="@drawable/questionblue4"/>
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/questionblue4" />
+
+</TabHost>
 </LinearLayout>

@@ -21,7 +21,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -350,7 +349,9 @@ public class Play extends Musica {
 				preguntas.add(new Question(c1.getString(1),c1.getString(2),new String[]{c1.getString(3),c1.getString(4),c1.getString(5),c1.getString(6)},c1.getInt(7),c1.getInt(8)));
 				cont++;
 			}
+			c1.close();
 		}
+		db.close();
 	}
 
 	@Override
@@ -501,10 +502,9 @@ public class Play extends Musica {
 			                        //Aquí paso a la siguiente pregunta
 			                    	if(preguntas.size()==numPregunta){
 			                    		recuperarXMLScore();
-			                    		terminarMusicaPlay();
 			                    		reanudarMusicaPrincipal();
-			                    		Intent i= new Intent(Play.this, Main.class);
-			            				startActivity(i);
+			                    		//Intent i= new Intent(Play.this, Main.class);
+			            				//startActivity(i);
 			            				finish();
 			    					}else{
 			    						realizarPregunta();
@@ -582,11 +582,10 @@ public class Play extends Musica {
 					serialiser.startTag(null, SCORE2);
 					serialiser.attribute(null, USERNAME, array[cont].getNombre());
 					serialiser.attribute(null, SCORE2, String.valueOf(array[cont].getScore()));
-					serialiser.attribute(null, RANKING, ""+cont+1);
+					serialiser.attribute(null, RANKING, ""+(cont+1));
 					
 					serialiser.endTag(null, SCORE2);
-				}
-					
+				}	
 			}
 			serialiser.endTag(null, SCORES);
 			serialiser.endDocument();
@@ -639,6 +638,7 @@ public class Play extends Musica {
 	@Override
 	protected void onPause() {
 		super.onPause();
+		terminarMusicaPlay();
 		SharedPreferences.Editor editor=preferencias.edit();
 		if(!isFinishing()){
 			editor.putBoolean("voltear", true);
@@ -657,7 +657,5 @@ public class Play extends Musica {
 		terminarMusicaPlay();
 		reanudarMusicaPrincipal();
 		finish();
-	}
-	
-	
+	}	
 }

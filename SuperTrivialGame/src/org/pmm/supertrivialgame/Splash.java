@@ -94,5 +94,10 @@ public class Splash extends Musica {
 		getMenuInflater().inflate(R.menu.splash, menu);
 		return true;
 	}
-
+	
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		terminarMusicaPrincipal();
+	}	
 }
