@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.view.Menu;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
@@ -71,8 +72,8 @@ public class Splash extends Musica {
 
 			@Override
 			public void onAnimationEnd(Animation arg0) {
-				iz.setVisibility(0);
-				der.setVisibility(0);
+				iz.setVisibility(View.INVISIBLE);
+				der.setVisibility(View.INVISIBLE);
 				Intent i= new Intent(Splash.this, Main.class);
 				startActivity(i);
 			}

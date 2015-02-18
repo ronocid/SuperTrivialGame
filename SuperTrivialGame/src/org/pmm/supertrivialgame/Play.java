@@ -17,7 +17,6 @@ import org.xmlpull.v1.XmlSerializer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -47,6 +46,7 @@ public class Play extends Musica {
 	private static final String RESPUESTA_CORRECTA = "Respuesta Correcta. Siguiente pregunta";
 	private static final String CORRECTA_UTLIMA_PREGUNTA = "Respuesta Correcta. Era la utlima pregunta. Tu puntuación es: ";
 	private static final String RESPUESTA = "Respuesta";
+	private static final String CHAMPION= "champion";
 
 	private ArrayList <Question> preguntas;
 	private int numPregunta=0;
@@ -395,7 +395,6 @@ public class Play extends Musica {
 		private static final String TIEMPO = "Tiempo";
 		private int cont;
 		
-		@SuppressLint("CommitPrefEdits")
 		@Override
 		protected void onPreExecute() {
 			progress=preferencias.getInt("tiempo", 0);
@@ -517,6 +516,8 @@ public class Play extends Musica {
 			}
 		});
 		alerta=ventana.create();
+		alerta.setCancelable(false);
+		alerta.setCanceledOnTouchOutside(false);
 		alerta.show();
 	}
 	
@@ -547,15 +548,18 @@ public class Play extends Musica {
 				if(eventType == XmlPullParser.START_TAG){
 					if(parser.getAttributeValue(null,USERNAME)!=null){
 						if(Integer.parseInt(parser.getAttributeValue(null, SCORE2)) >= this.puntuacion || datoIntroducido){
-							new Puntuaciones(parser.getAttributeValue(null, USERNAME), Integer.parseInt(parser.getAttributeValue(null, SCORE2)));
+							new Puntuaciones(parser.getAttributeValue(null, USERNAME), Integer.parseInt(parser.getAttributeValue(null, SCORE2)),parser.getAttributeValue(null, CHAMPION));
 						}else{
-							new Puntuaciones(recuperarNombreUsuario(), this.puntuacion);
-							new Puntuaciones(parser.getAttributeValue(null, USERNAME), Integer.parseInt(parser.getAttributeValue(null, SCORE2)));
+							new Puntuaciones(recuperarNombreUsuario(), this.puntuacion,"no");
+							new Puntuaciones(parser.getAttributeValue(null, USERNAME), Integer.parseInt(parser.getAttributeValue(null, SCORE2)),parser.getAttributeValue(null, CHAMPION));
 							datoIntroducido=true;
 						}	
 					}
 				}
 				eventType = parser.next();
+			}
+			if(!datoIntroducido){
+				new Puntuaciones(recuperarNombreUsuario(), this.puntuacion,"no");
 			}
 			inputStream.close();
 			escribirScores();
@@ -583,7 +587,12 @@ public class Play extends Musica {
 					serialiser.attribute(null, USERNAME, array[cont].getNombre());
 					serialiser.attribute(null, SCORE2, String.valueOf(array[cont].getScore()));
 					serialiser.attribute(null, RANKING, ""+(cont+1));
-					
+					if(cont==0){
+						serialiser.attribute(null, CHAMPION, "si");
+					}else{
+						serialiser.attribute(null, CHAMPION, array[cont].getChampion());
+					}
+						
 					serialiser.endTag(null, SCORE2);
 				}	
 			}
@@ -613,6 +622,7 @@ public class Play extends Musica {
 			serialiser.attribute(null, USERNAME, recuperarNombreUsuario());
 			serialiser.attribute(null, SCORE2, String.valueOf(puntuacion));
 			serialiser.attribute(null, RANKING, ""+1);
+			serialiser.attribute(null, CHAMPION, "si");
 			serialiser.endTag(null, SCORE2);
 			serialiser.endTag(null, SCORES);
 			serialiser.endDocument();

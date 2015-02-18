@@ -5,6 +5,7 @@ public class Puntuaciones {
 	private int score;
 	private static Puntuaciones [] array= new Puntuaciones [25];
 	private static int posicion = 0;
+	private String champion;
 	
 	public Puntuaciones(String nombre, int score) {
 		super();
@@ -12,8 +13,23 @@ public class Puntuaciones {
 		this.score = score;
 		if (posicion<25){
 			array[posicion]= this;
-			this.posicion++;
+			posicion++;
 		}
+	}
+	
+	public Puntuaciones(String nombre, int score,String champion) {
+		super();
+		this.nombre = nombre;
+		this.score = score;
+		this.champion= champion;
+		if (posicion<25){
+			array[posicion]= this;
+			posicion++;
+		}
+	}
+	
+	public String getChampion() {
+		return champion;
 	}
 	
 	public String getNombre() {
