@@ -1,16 +1,16 @@
 package org.pmm.supertrivialgame;
 
 import java.util.Scanner;
-
+import dialog.DialogHelp;
 import android.os.Bundle;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.pm.ActivityInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 public class Creditos extends Musica {
+	private TextView descripcion;
+	private TextView autores;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -18,8 +18,13 @@ public class Creditos extends Musica {
 		setContentView(R.layout.activity_creditos);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		
-		TextView descripcion= (TextView)findViewById(R.id.textViewDescripcion);
-		TextView autores=(TextView)findViewById(R.id.textViewAutores);
+		descripcion= (TextView)findViewById(R.id.textViewDescripcion);
+		autores=(TextView)findViewById(R.id.textViewAutores);
+		
+		writeCredits();
+	}
+
+	private void writeCredits() {
 		try{
 			Scanner lectura=new Scanner(getResources().openRawResource(R.raw.creditos),"UTF-8");
 			String lecturalinea="";
@@ -40,7 +45,6 @@ public class Creditos extends Musica {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.creditos, menu);
 		return true;
 	}
@@ -48,17 +52,10 @@ public class Creditos extends Musica {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()){
 			case R.id.action_help:
-				Builder ventana =new AlertDialog.Builder(this);
-				ventana.setTitle("Ayuda");
-				ventana.setMessage("La ayuda esta disponible en www.noexiste.com.");
-				ventana.setIcon(android.R.drawable.ic_dialog_info);
-				ventana.setPositiveButton("OK", null);
-				ventana.show();
+				DialogHelp.startDialogHelp(this);
 				return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-		
 	}
-
 }

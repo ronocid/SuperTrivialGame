@@ -1,8 +1,7 @@
 package org.pmm.supertrivialgame;
 
+import dialog.DialogHelp;
 import android.os.Bundle;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.view.Menu;
@@ -67,16 +66,15 @@ public class Main extends Musica {
 			startActivity(i);
 			return true;
 		case R.id.action_help:
-			Builder ventana =new AlertDialog.Builder(this);
-			ventana.setTitle("Ayuda");
-			ventana.setMessage("La ayuda esta disponible en www.noexiste.com.");
-			ventana.setIcon(android.R.drawable.ic_dialog_info);
-			ventana.setPositiveButton("OK", null);
-			ventana.show();
+			dialogHelp();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private void dialogHelp() {
+		DialogHelp.startDialogHelp(this);
 	}
 
 	@Override

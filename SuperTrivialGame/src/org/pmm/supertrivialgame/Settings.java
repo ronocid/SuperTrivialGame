@@ -1,5 +1,6 @@
 package org.pmm.supertrivialgame;
 
+import constants.Contants;
 import android.os.Bundle;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -17,10 +18,10 @@ import android.widget.Toast;
 public class Settings extends Musica {
 	private EditText nombre;
 	private EditText email;
-	private String[] datosQuestionPreferences;
-	private String[] data;
-	private Spinner lista;
-	boolean itemSelected[];
+	private String[] listQuestionThemes;
+	private String[] listServers;
+	private Spinner servers;
+	boolean listQuestionThemesSelection[];
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,41 +31,37 @@ public class Settings extends Musica {
 
 		this.nombre=(EditText) findViewById(R.id.editText1);
 		this.email=(EditText) findViewById(R.id.editText2);
-		datosQuestionPreferences = new String[]{"Sports", "Literature", "Science", "Movies", "History"};
-		this.itemSelected = new boolean[datosQuestionPreferences.length];
+		this.servers = (Spinner)findViewById(R.id.spinner1);
+		Button botonSelectPreferences = (Button)findViewById(R.id.button1);	
 		
-		SharedPreferences preferencias=getSharedPreferences("settings", MODE_PRIVATE);
-		this.nombre.setText(preferencias.getString("nombre", "Usuario1"));
-		this.email.setText(preferencias.getString("email", "User1@gmail.com"));
-		for(int cont=0;cont<datosQuestionPreferences.length;cont++){
-			this.itemSelected[cont]=preferencias.getBoolean(datosQuestionPreferences[cont], false);
-		}
-	
-		
-		
-		//Radio button de Question Server
-		data = new String[]{"None","dakkon.isca.upv.es","Test server (not working!)"};
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, data);
-		lista = (Spinner)findViewById(R.id.spinner1);
-		////Indicamos el tipo de Spinner 
-		adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
-		// Establecemos el adaptador en el Spinner
-		lista.setAdapter(adapter);
-		
-		lista.setSelection(preferencias.getInt("server", 0));
-		
-		//CheckBox de Question Preferences
+		initializationData();
+		retrievingPreferences();	
+		createAdapterSpinnerServer();
+
+		final AlertDialog.Builder ventanaPreferences = alertDialogSelectedQuestionThemes();	
+		botonSelectPreferences.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				//questionPrefrences.show();
+				ventanaPreferences.show();
+			}
+		});
+
+	}
+
+	private AlertDialog.Builder alertDialogSelectedQuestionThemes() {
 		final AlertDialog.Builder ventanaPreferences =new AlertDialog.Builder(this);
 		
-		ventanaPreferences.setTitle("Question Preferences");
-		ventanaPreferences.setMultiChoiceItems(datosQuestionPreferences, itemSelected, new DialogInterface.OnMultiChoiceClickListener() {
+		ventanaPreferences.setTitle(Contants.TITLE_DIALOG_THEMES);
+		ventanaPreferences.setMultiChoiceItems(listQuestionThemes, listQuestionThemesSelection, new DialogInterface.OnMultiChoiceClickListener() {
 						
 			@Override
 			public void onClick(DialogInterface dialog, int which, boolean isChecked) {
 				if(isChecked){
-					itemSelected[which]=true;
+					listQuestionThemesSelection[which]=true;
 				}else {
-					itemSelected[which]=false;
+					listQuestionThemesSelection[which]=false;
 				}				
 			}
 		});
@@ -75,19 +72,30 @@ public class Settings extends Musica {
 			public void onClick(DialogInterface dialog, int which) {
 				Toast.makeText(getApplicationContext(), "Saved preferences...", Toast.LENGTH_SHORT).show();				
 			}
-		});	
-		//se recupera el boton
-		Button botonSelectPreferences = (Button)findViewById(R.id.button1);				
-		// se asigna el listener
-		botonSelectPreferences.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				//questionPrefrences.show();
-				ventanaPreferences.show();
-			}
 		});
+		return ventanaPreferences;
+	}
 
+	private void createAdapterSpinnerServer() {
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listServers);
+		adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
+		servers.setAdapter(adapter);
+	}
+
+	private void retrievingPreferences() {
+		SharedPreferences preferencias=getSharedPreferences(Contants.FILE_NAME_SETTINGS, MODE_PRIVATE);
+		this.nombre.setText(preferencias.getString(Contants.NOMBRE, Contants.DEFAULT_NAME));
+		this.email.setText(preferencias.getString(Contants.EMAIL, Contants.DEFAULT_EMAIL));
+		for(int cont=0;cont<listQuestionThemes.length;cont++){
+			this.listQuestionThemesSelection[cont]=preferencias.getBoolean(listQuestionThemes[cont], Contants.DEFAULT_QUESTION_THEME);
+		}
+		this.servers.setSelection(preferencias.getInt(Contants.SERVER, 0));
+	}
+
+	private void initializationData() {
+		this.listQuestionThemes = new String[]{Contants.SPORTS, Contants.LITERATURE, Contants.SCIENCE, Contants.MOVIES, Contants.HISTORY};
+		this.listServers = new String[]{Contants.NONE,Contants.DAKKON_ISCA_UPV_ES,Contants.TEST_SERVER_NOT_WORKING};
+		this.listQuestionThemesSelection = new boolean[listQuestionThemes.length];
 	}
 
 	@Override
@@ -114,18 +122,16 @@ public class Settings extends Musica {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		SharedPreferences preferencias= getSharedPreferences("settings", MODE_PRIVATE);
+		SharedPreferences preferencias= getSharedPreferences(Contants.FILE_NAME_SETTINGS, MODE_PRIVATE);
 		
 		SharedPreferences.Editor editor=preferencias.edit();
-		editor.putString("nombre", this.nombre.getText().toString());
-		editor.putString("email", this.email.getText().toString());
+		editor.putString(Contants.NOMBRE, this.nombre.getText().toString());
+		editor.putString(Contants.EMAIL, this.email.getText().toString());
 		
-		for(int cont=0;cont<datosQuestionPreferences.length;cont++){
-			editor.putBoolean(datosQuestionPreferences[cont], itemSelected[cont]);
+		for(int cont=0;cont<listQuestionThemes.length;cont++){
+			editor.putBoolean(listQuestionThemes[cont], listQuestionThemesSelection[cont]);
 		}
-		editor.putInt("server", lista.getSelectedItemPosition());
+		editor.putInt(Contants.SERVER, servers.getSelectedItemPosition());
 		editor.commit();
 	}
-
-
 }

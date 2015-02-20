@@ -1,16 +1,15 @@
 package org.pmm.supertrivialgame;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
+import java.util.List;
+import modelo.XmlScores;
+import constants.Contants;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
-import android.util.Xml;
 import android.view.Menu;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TabHost;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -18,33 +17,34 @@ import android.widget.TextView;
 
 public class Scores extends Activity {
 	private TableLayout tabla;
-	private static final String SCORE2 = "score";
-	private static final String USERNAME = "username";
-	private static final String RANKING = "ranking";
+	private ProgressBar esperando;
 
-	@SuppressLint("ResourceAsColor")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_scores);
 		this.tabla =(TableLayout)findViewById(R.id.table);
-		
-		TabHost tabs=(TabHost)findViewById(android.R.id.tabhost);
-		tabs.setup();
-		
-		TabHost.TabSpec spec=tabs.newTabSpec("Usuario");
-		spec.setContent(R.id.tab1);
-		spec.setIndicator("Usuario", getResources().getDrawable(R.drawable.usericon));
-		tabs.addTab(spec);
-		
-		spec=tabs.newTabSpec("Friends");
-		spec.setContent(R.id.tab2);
-		spec.setIndicator("Amigos", getResources().getDrawable(R.drawable.friends));
-		
-		tabs.addTab(spec);
+		this.esperando = (ProgressBar)findViewById(R.id.progressBar1);
+		createTab();
 		
 		Leer hilo= new Leer();
 		hilo.execute();
+	}
+
+	private void createTab() {
+		TabHost tabs=(TabHost)findViewById(android.R.id.tabhost);
+		tabs.setup();
+		
+		TabHost.TabSpec spec=tabs.newTabSpec(Contants.TITLE_TAB1);
+		spec.setContent(R.id.tab1);
+		spec.setIndicator(Contants.TITLE_TAB1, getResources().getDrawable(R.drawable.usericon));
+		tabs.addTab(spec);
+		
+		spec=tabs.newTabSpec(Contants.TITLE_TAB2);
+		spec.setContent(R.id.tab2);
+		spec.setIndicator(Contants.TITLE_TAB2, getResources().getDrawable(R.drawable.friends));
+		
+		tabs.addTab(spec);
 	}
 
 	@Override
@@ -54,73 +54,62 @@ public class Scores extends Activity {
 	}
 	
 	public class Leer extends AsyncTask<Void,TableRow,Void>{
-		
-		private FileInputStream inputStream;
-		private XmlPullParser parser;
-		private int eventType;
+		int progress;
+		private List<Puntuaciones> listScores;
 		@Override
 		protected void onPreExecute() {
-			try {
-				inputStream = openFileInput("scores.xml");
-				parser = Xml.newPullParser();
-				parser.setInput(inputStream, "UTF-8");
-				eventType = XmlPullParser.START_DOCUMENT;
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (XmlPullParserException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			listScores = XmlScores.ReadFileScore(getApplicationContext());
+			progress =0;
 		}
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
 			try{
-				while(eventType != XmlPullParser.END_DOCUMENT){
-					if(eventType == XmlPullParser.START_TAG){
-						if(parser.getAttributeValue(null,USERNAME)!=null){
-							String username=parser.getAttributeValue(null, USERNAME);
-							String puntuacion =parser.getAttributeValue(null, SCORE2);
-							String posicion =parser.getAttributeValue(null, RANKING);
-							
-							TableRow fila = new TableRow(Scores.this);
-							
-							TextView user=new TextView(Scores.this);
-							user.setText(username);
-							user.setGravity(17);
-							user.setTextColor(Color.BLUE);
-							user.setTypeface(null, 1);
-							
-							TextView score=new TextView(Scores.this);
-							score.setText(puntuacion);
-							score.setGravity(17);
-							score.setTextColor(Color.BLUE);
-							score.setTypeface(null, 1);
-							
-							TextView ranking=new TextView(Scores.this);
-							ranking.setText(posicion);
-							ranking.setGravity(17);
-							ranking.setTextColor(Color.BLUE);
-							ranking.setTypeface(null, 1);
-							
-							fila.addView(user);
-							fila.addView(score);
-							fila.addView(ranking);
-							
-							publishProgress(fila);
-						}
-					}
-					eventType = parser.next();
+				for(int cont = 0;cont<listScores.size();cont++){
+					Puntuaciones scoreUser = listScores.get(cont);
+					progress++;					
+					TableRow fila = new TableRow(getApplicationContext());
+					
+					TextView user=new TextView(getApplicationContext());
+					user.setText(scoreUser.getNombre());
+					configurationTextView(user);
+					
+					TextView score=new TextView(getApplicationContext());
+					score.setText(scoreUser.getScore()+"");
+					configurationTextView(score);
+					
+					TextView ranking=new TextView(getApplicationContext());
+					ranking.setText(""+(cont+1));
+					configurationTextView(ranking);
+					
+					TextView cham=new TextView(getApplicationContext());
+					cham.setText(scoreUser.getChampion());
+					configurationTextView(cham);
+					
+					fila.addView(user);
+					fila.addView(score);
+					fila.addView(ranking);
+					fila.addView(cham);
+					
+					publishProgress(fila);
 				}
+				esperando.setVisibility(View.INVISIBLE);
 			}catch (Exception e){
-				
+				System.out.println("Error mostrar tabla score "+ e);
 			}
 			return null;
+		}
+
+		private void configurationTextView(TextView textView) {
+			textView.setGravity(17);
+			textView.setTextColor(Color.BLUE);
+			textView.setTypeface(null, 1);
 		}
 		
 		@Override
 		protected void onProgressUpdate(TableRow... values) {
 			if(values[0]!=null)
+				//esperando.setProgress(progress);
 				tabla.addView(values[0]);
 		}	
 	}

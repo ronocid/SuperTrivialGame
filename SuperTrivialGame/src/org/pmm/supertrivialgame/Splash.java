@@ -27,38 +27,13 @@ public class Splash extends Musica {
 		
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		
-		ImageView azul=(ImageView)findViewById(R.id.azul);
-		Animation animAzul=AnimationUtils.loadAnimation(this, R.anim.animacionazul);
-		azul.setAnimation(animAzul);
-		
-		ImageView amarillo=(ImageView)findViewById(R.id.amarillo);
-		Animation animAmarillo=AnimationUtils.loadAnimation(this, R.anim.animacionamarillo);
-		amarillo.setAnimation(animAmarillo);
-		
-		ImageView morado=(ImageView)findViewById(R.id.morado);
-		Animation animMorado=AnimationUtils.loadAnimation(this, R.anim.animacionmorado);
-		morado.setAnimation(animMorado);
-		
-		ImageView naranja=(ImageView)findViewById(R.id.naranja);
-		Animation animNaranja=AnimationUtils.loadAnimation(this, R.anim.animacionnaranja);
-		naranja.setAnimation(animNaranja);
-		
-		ImageView rojo=(ImageView)findViewById(R.id.rojo);
-		Animation animRojo=AnimationUtils.loadAnimation(this, R.anim.animacionrojo);
-		rojo.setAnimation(animRojo);
-		
-		ImageView verde=(ImageView)findViewById(R.id.verde);
-		Animation animVerde=AnimationUtils.loadAnimation(this, R.anim.animacionverde);
-		verde.setAnimation(animVerde);
-		
-		iz=(ImageView)findViewById(R.id.iz);
-		Animation animIz=AnimationUtils.loadAnimation(this, R.anim.animintroizq);
-		iz.setAnimation(animIz);
-		
-		der=(ImageView)findViewById(R.id.de);
-		Animation animDer=AnimationUtils.loadAnimation(this, R.anim.animintroder);
-		der.setAnimation(animDer);
-		
+		startAnimationFlickerColors();
+		startMotionColors();
+		startAnimationText();
+	}
+
+
+	private void startAnimationText() {
 		TextView texto1=(TextView)findViewById(R.id.textViewTextoTitulo1);
 		Animation animtexto= AnimationUtils.loadAnimation(this, R.anim.animletras);
 		texto1.setAnimation(animtexto);
@@ -86,6 +61,44 @@ public class Splash extends Musica {
 			public void onAnimationStart(Animation arg0) {
 				
 			}});
+	}
+
+
+	private void startMotionColors() {
+		iz=(ImageView)findViewById(R.id.iz);
+		Animation animIz=AnimationUtils.loadAnimation(this, R.anim.animintroizq);
+		iz.setAnimation(animIz);
+		
+		der=(ImageView)findViewById(R.id.de);
+		Animation animDer=AnimationUtils.loadAnimation(this, R.anim.animintroder);
+		der.setAnimation(animDer);
+	}
+
+
+	private void startAnimationFlickerColors() {
+		ImageView azul=(ImageView)findViewById(R.id.azul);
+		Animation animAzul=AnimationUtils.loadAnimation(this, R.anim.animacionazul);
+		azul.setAnimation(animAzul);
+		
+		ImageView amarillo=(ImageView)findViewById(R.id.amarillo);
+		Animation animAmarillo=AnimationUtils.loadAnimation(this, R.anim.animacionamarillo);
+		amarillo.setAnimation(animAmarillo);
+		
+		ImageView morado=(ImageView)findViewById(R.id.morado);
+		Animation animMorado=AnimationUtils.loadAnimation(this, R.anim.animacionmorado);
+		morado.setAnimation(animMorado);
+		
+		ImageView naranja=(ImageView)findViewById(R.id.naranja);
+		Animation animNaranja=AnimationUtils.loadAnimation(this, R.anim.animacionnaranja);
+		naranja.setAnimation(animNaranja);
+		
+		ImageView rojo=(ImageView)findViewById(R.id.rojo);
+		Animation animRojo=AnimationUtils.loadAnimation(this, R.anim.animacionrojo);
+		rojo.setAnimation(animRojo);
+		
+		ImageView verde=(ImageView)findViewById(R.id.verde);
+		Animation animVerde=AnimationUtils.loadAnimation(this, R.anim.animacionverde);
+		verde.setAnimation(animVerde);
 	}
 
 	@Override
