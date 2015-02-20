@@ -41,7 +41,7 @@ public class XmlScores {
 				serialiser.attribute(null, Contants.USERNAME, score.getNombre());
 				serialiser.attribute(null, Contants.SCORE, String.valueOf(score.getScore()));
 				serialiser.attribute(null, Contants.RANKING, ""+(cont+1));	
-				serialiser.attribute(null, Contants.CHAMPION, ""+(cont+1));	
+				serialiser.attribute(null, Contants.CHAMPION,score.getChampion());	
 				serialiser.endTag(null, Contants.SCORE);
 			}
 			serialiser.endTag(null, Contants.LIST_SCORES);
@@ -62,16 +62,21 @@ public class XmlScores {
 	private static void orderScores(List<Puntuaciones> listScores,
 			Puntuaciones currentScore) {
 		boolean insertCurrentUser = false;
-		for(int cont =0;cont<listScores.size() && insertCurrentUser==false;cont++){
-			Puntuaciones score = listScores.get(cont);
-			if(currentScore.getScore() >= score.getScore()){
-				if(cont == 0){
+		if(listScores.size()>0){
+			for(int cont =0;cont<listScores.size() && insertCurrentUser==false;cont++){
+				Puntuaciones score = listScores.get(cont);
+				if(currentScore.getScore() >= score.getScore()){
+					if(cont == 0){
+						currentScore.setChampion(Contants.CHAMPION_YES);
+					}
 					listScores.add(cont, currentScore);
 					insertCurrentUser=true;
 				}
 			}
-		}
-		if(!insertCurrentUser){
+			if(!insertCurrentUser){
+				listScores.add(currentScore);
+			}
+		}else{
 			currentScore.setChampion(Contants.CHAMPION_YES);
 			listScores.add(currentScore);
 		}

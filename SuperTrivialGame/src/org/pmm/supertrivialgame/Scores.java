@@ -109,7 +109,7 @@ public class Scores extends Activity {
 		@Override
 		protected void onProgressUpdate(TableRow... values) {
 			if(values[0]!=null)
-				//esperando.setProgress(progress);
+				esperando.setProgress(progress);
 				tabla.addView(values[0]);
 		}	
 	}
