@@ -17,7 +17,6 @@ import org.xmlpull.v1.XmlSerializer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -395,7 +394,6 @@ public class Play extends Musica {
 		private static final String TIEMPO = "Tiempo";
 		private int cont;
 		
-		@SuppressLint("CommitPrefEdits")
 		@Override
 		protected void onPreExecute() {
 			progress=preferencias.getInt("tiempo", 0);

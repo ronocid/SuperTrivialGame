@@ -6,7 +6,6 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
 import android.util.Xml;
@@ -22,7 +21,6 @@ public class Scores extends Activity {
 	private static final String USERNAME = "username";
 	private static final String RANKING = "ranking";
 
-	@SuppressLint("ResourceAsColor")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
