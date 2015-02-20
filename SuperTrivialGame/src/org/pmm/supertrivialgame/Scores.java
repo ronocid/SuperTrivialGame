@@ -10,6 +10,8 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.util.Xml;
 import android.view.Menu;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TabHost;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -20,12 +22,15 @@ public class Scores extends Activity {
 	private static final String SCORE2 = "score";
 	private static final String USERNAME = "username";
 	private static final String RANKING = "ranking";
+	private ProgressBar esperando;
+	private static final String CHAMPION= "champion";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_scores);
 		this.tabla =(TableLayout)findViewById(R.id.table);
+		this.esperando = (ProgressBar)findViewById(R.id.progressBar1);
 		
 		TabHost tabs=(TabHost)findViewById(android.R.id.tabhost);
 		tabs.setup();
@@ -43,6 +48,7 @@ public class Scores extends Activity {
 		
 		Leer hilo= new Leer();
 		hilo.execute();
+		
 	}
 
 	@Override
@@ -55,7 +61,8 @@ public class Scores extends Activity {
 		
 		private FileInputStream inputStream;
 		private XmlPullParser parser;
-		private int eventType;
+		private int eventType; 
+		int progress;
 		@Override
 		protected void onPreExecute() {
 			try {
@@ -69,6 +76,7 @@ public class Scores extends Activity {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			progress =0;
 		}
 
 		@Override
@@ -77,9 +85,11 @@ public class Scores extends Activity {
 				while(eventType != XmlPullParser.END_DOCUMENT){
 					if(eventType == XmlPullParser.START_TAG){
 						if(parser.getAttributeValue(null,USERNAME)!=null){
+							progress++;
 							String username=parser.getAttributeValue(null, USERNAME);
 							String puntuacion =parser.getAttributeValue(null, SCORE2);
 							String posicion =parser.getAttributeValue(null, RANKING);
+							String champion =parser.getAttributeValue(null, CHAMPION);
 							
 							TableRow fila = new TableRow(Scores.this);
 							
@@ -101,15 +111,23 @@ public class Scores extends Activity {
 							ranking.setTextColor(Color.BLUE);
 							ranking.setTypeface(null, 1);
 							
+							TextView cham=new TextView(Scores.this);
+							cham.setText(champion);
+							cham.setGravity(17);
+							cham.setTextColor(Color.BLUE);
+							cham.setTypeface(null, 1);
+							
 							fila.addView(user);
 							fila.addView(score);
 							fila.addView(ranking);
+							fila.addView(cham);
 							
 							publishProgress(fila);
 						}
 					}
 					eventType = parser.next();
 				}
+				esperando.setVisibility(View.INVISIBLE);
 			}catch (Exception e){
 				
 			}
@@ -119,6 +137,7 @@ public class Scores extends Activity {
 		@Override
 		protected void onProgressUpdate(TableRow... values) {
 			if(values[0]!=null)
+				esperando.setProgress(progress);
 				tabla.addView(values[0]);
 		}	
 	}

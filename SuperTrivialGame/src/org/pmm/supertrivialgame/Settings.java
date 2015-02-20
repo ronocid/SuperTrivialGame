@@ -47,7 +47,7 @@ public class Settings extends Musica {
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, data);
 		lista = (Spinner)findViewById(R.id.spinner1);
 		////Indicamos el tipo de Spinner 
-		adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
+		adapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
 		// Establecemos el adaptador en el Spinner
 		lista.setAdapter(adapter);
 		
